@@ -1,0 +1,23 @@
+default:
+  tags:
+    - backend-docker
+#include:
+#  - template: Auto-DevOps.gitlab-ci.yml
+
+stages:
+  - build
+  - publish
+
+build:
+  stage: build
+  image: gradle:jdk21-jammy
+  script:
+    - gradle build --no-daemon
+
+publish:
+  stage: publish
+  image: gradle:jdk21-jammy
+  only:
+    - main
+  script:
+    - gradle publishMavenPublicationToGitLabRepository --no-daemon
