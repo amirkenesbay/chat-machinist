@@ -36,6 +36,10 @@ class EventTypeMatcherImpl(
             return EventType.PHOTO
         }
 
+        if (update.message.voice != null) {
+            return EventType.VOICE
+        }
+
         throw IllegalStateException("Cannot match event type")
     }
 }

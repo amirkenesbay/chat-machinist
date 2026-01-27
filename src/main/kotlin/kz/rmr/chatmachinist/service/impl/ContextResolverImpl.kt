@@ -65,7 +65,8 @@ class ContextResolverImpl<STATE: Any, CONTEXT: Any>(
             repliedToMessageId = update.message?.replyToMessage?.messageId,
             languageCode = chat?.languageCode,
             photos = update.message?.photo,
-            document = update.message?.document
+            document = update.message?.document,
+            voice = update.message?.voice
         )
     }
 

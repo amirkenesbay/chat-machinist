@@ -21,6 +21,7 @@ data class ActionContext<STATE, CONTEXT>(
     var languageCode: String?,
     var photos: List<PhotoSize>?,
     var document: Document?,
+    var voice: Voice?
 ) {
     inline fun <reified TRIGGER_CONTEXT> triggerContext(): TRIGGER_CONTEXT? {
         return _triggerContext as? TRIGGER_CONTEXT

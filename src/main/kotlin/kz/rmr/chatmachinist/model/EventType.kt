@@ -8,4 +8,5 @@ enum class EventType {
     TRIGGERED,
     DOCUMENT,
     PHOTO,
+    VOICE
 }

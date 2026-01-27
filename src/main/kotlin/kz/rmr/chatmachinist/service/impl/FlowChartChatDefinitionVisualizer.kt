@@ -147,5 +147,6 @@ class FlowChartChatDefinitionVisualizer<STATE : Any, CONTEXT : Any> : ChatDefini
         EventType.DOCUMENT -> "document"
         EventType.PHOTO -> "photo"
         EventType.WEB_APP_DATA -> "webAppData"
+        EventType.VOICE -> "voice"
     }
 }
