@@ -102,6 +102,7 @@ class ReplyHandlerImpl<STATE : Any, CONTEXT : Any>(
         apiMethods: MutableList<BotApiMethod<*>>,
         matched: MatchedTransition<STATE, CONTEXT>
     ) {
+        telegramClient.sendChatAction(chat.externalId, "typing")
         val sendMessage = SendMessage().apply {
             this.text = message.text
             this.replyMarkup = message.replyMarkup
@@ -182,7 +183,7 @@ class ReplyHandlerImpl<STATE : Any, CONTEXT : Any>(
 
                             InlineKeyboardButton().apply {
                                 this.text = buttonText
-                                this.callbackData = callbackDataService.encode(ButtonData(buttonDefinition.type.name, buttonText))
+                                this.callbackData = callbackDataService.encode(ButtonData(buttonDefinition.type.name, buttonDefinition.data ?: buttonText))
                                 this.url = buttonDefinition.link
                             }
                         }

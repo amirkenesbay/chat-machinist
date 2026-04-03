@@ -2,6 +2,10 @@ package kz.rmr.chatmachinist.builders
 
 import kz.rmr.chatmachinist.api.reply.*
 import kz.rmr.chatmachinist.model.*
+import kz.rmr.chatmachinist.widget.calendarRows
+import kz.rmr.chatmachinist.widget.yearPickerRows
+import kz.rmr.chatmachinist.widget.monthPickerRows
+import java.util.Locale
 
 class RepliesBuilderImpl<STATE : Enum<STATE>, CONTEXT : Any> : RepliesBuilder<STATE, CONTEXT> {
     override var chatName: String? = null
@@ -116,6 +120,7 @@ class KeyboardBuilderImpl<STATE : Enum<STATE>, CONTEXT : Any> : KeyboardBuilder<
     override var inline: Boolean = true
 
     private var buttonRowBuilders: MutableList<ButtonRowBuilderImpl<STATE, CONTEXT>> = mutableListOf()
+    private var extraRows: MutableList<ButtonRowDefinition> = mutableListOf()
 
     override fun buttonRow(init: ButtonRowBuilder<*, *>.() -> Unit): ButtonRowBuilder<*, *> {
         val buttonRowBuilder = ButtonRowBuilderImpl<STATE, CONTEXT>()
@@ -124,8 +129,20 @@ class KeyboardBuilderImpl<STATE : Enum<STATE>, CONTEXT : Any> : KeyboardBuilder<
         return buttonRowBuilder
     }
 
+    override fun calendar(year: Int, month: Int, locale: Locale) {
+        extraRows.addAll(calendarRows(year, month, locale))
+    }
+
+    override fun yearPicker(currentYear: Int) {
+        extraRows.addAll(yearPickerRows(currentYear))
+    }
+
+    override fun monthPicker(year: Int, locale: Locale) {
+        extraRows.addAll(monthPickerRows(year, locale))
+    }
+
     fun build(state: STATE): KeyboardDefinition {
-        return KeyboardDefinition(inline, buttonRowBuilders.map { it.build(state) })
+        return KeyboardDefinition(inline, buttonRowBuilders.map { it.build(state) } + extraRows)
     }
 }
 
@@ -152,6 +169,7 @@ class ButtonBuilderImpl<STATE : Enum<STATE>, CONTEXT : Any> : ButtonBuilder<STAT
     override var textCode: String? = null
     override var type: Enum<*>? = null
     override var link: String? = null
+    override var data: String? = null
 
     fun build(state: STATE): ButtonDefinition {
         if (text == null && textCode == null) {
@@ -160,7 +178,7 @@ class ButtonBuilderImpl<STATE : Enum<STATE>, CONTEXT : Any> : ButtonBuilder<STAT
         if (type == null) {
             throw IllegalStateException("type is not set in button for state $state")
         }
-        return ButtonDefinition(text, textCode, type!!, link)
+        return ButtonDefinition(text, textCode, type!!, link, data)
     }
 }
 

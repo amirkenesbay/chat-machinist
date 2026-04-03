@@ -18,4 +18,4 @@ data class KeyboardDefinition(val inline: Boolean, val buttonRowDefinitions: Lis
 
 data class ButtonRowDefinition(val buttonDefinitions: List<ButtonDefinition>)
 
-data class ButtonDefinition(val text: String?, val textCode: String?, val type: Enum<*>, val link: String?)
+data class ButtonDefinition(val text: String?, val textCode: String?, val type: Enum<*>, val link: String?, val data: String? = null)

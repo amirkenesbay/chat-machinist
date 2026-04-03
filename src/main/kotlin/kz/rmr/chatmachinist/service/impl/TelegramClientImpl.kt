@@ -8,9 +8,10 @@ import org.telegram.telegrambots.bots.DefaultAbsSender
 import org.telegram.telegrambots.bots.DefaultBotOptions
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery
 import org.telegram.telegrambots.meta.api.methods.commands.DeleteMyCommands
-import org.telegram.telegrambots.meta.api.methods.commands.GetMyCommands
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember
+import org.telegram.telegrambots.meta.api.methods.ActionType
+import org.telegram.telegrambots.meta.api.methods.send.SendChatAction
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto
@@ -77,6 +78,13 @@ class TelegramClientImpl(chatMachinistProperties: ChatMachinistProperties) : Tel
 
     override fun sendDocument(document: SendDocument) {
         execute(document)
+    }
+
+    override fun sendChatAction(chatId: String, action: String) {
+        val sendChatAction = SendChatAction()
+        sendChatAction.chatId = chatId
+        sendChatAction.setAction(ActionType.get(action))
+        execute(sendChatAction)
     }
 
 }

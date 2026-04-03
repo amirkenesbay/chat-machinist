@@ -1,0 +1,14 @@
+package kz.rmr.chatmachinist.widget
+
+enum class CalendarButtonType {
+    CALENDAR_PREV_YEAR,
+    CALENDAR_NEXT_YEAR,
+    CALENDAR_PREV_MONTH,
+    CALENDAR_NEXT_MONTH,
+    CALENDAR_SELECT_YEAR,
+    CALENDAR_SELECT_MONTH,
+    CALENDAR_YEAR,
+    CALENDAR_MONTH,
+    CALENDAR_DAY,
+    CALENDAR_EMPTY
+}

@@ -22,4 +22,5 @@ interface TelegramClient {
     fun getChatMember(getChatMemberRequest: GetChatMember?): ChatMember?
     fun sendPhoto(message: SendPhoto)
     fun sendDocument(document: SendDocument)
+    fun sendChatAction(chatId: String, action: String)
 }

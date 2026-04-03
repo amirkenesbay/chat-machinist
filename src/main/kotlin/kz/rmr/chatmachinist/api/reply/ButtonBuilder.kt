@@ -8,4 +8,5 @@ interface ButtonBuilder<STATE : Enum<STATE>, CONTEXT : Any> {
     var textCode: String?
     var type: Enum<*>?
     var link: String?
+    var data: String?
 }
