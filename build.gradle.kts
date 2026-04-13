@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("org.springframework.boot") version "4.0.1"
@@ -52,13 +53,29 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.named<BootJar>("bootJar") {
+    enabled = false
+}
+
+tasks.named<Jar>("jar") {
+    enabled = true
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
         }
-        repositories {
-            mavenLocal()
+    }
+    repositories {
+        mavenLocal()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/amirkenesbay/chat-machinist")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 }
