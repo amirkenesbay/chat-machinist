@@ -21,6 +21,7 @@ class TransitionMatcherImpl<STATE : Any, CONTEXT : Any>(
         update: Update,
         chat: Chat<STATE, CONTEXT>
     ): MatchedTransition<STATE, CONTEXT>? {
+        var triggerDialogId: String? = null
         if (update.callbackQuery?.data != null) {
             val callbackData = callbackDataService.decode(update.callbackQuery.data)
             if (callbackData is TriggerData) {
@@ -28,6 +29,7 @@ class TransitionMatcherImpl<STATE : Any, CONTEXT : Any>(
                     logger.debug { "The update cannot be handled in chat ${chatDefinition.name}" }
                     return null
                 }
+                triggerDialogId = callbackData.triggerDialogId
             }
         }
         return chatDefinition
@@ -60,6 +62,11 @@ class TransitionMatcherImpl<STATE : Any, CONTEXT : Any>(
 
 
                 chat.dialogs
+                    .let { dialogs ->
+                        if (triggerDialogId != null) {
+                            dialogs.filter { it.id == triggerDialogId }
+                        } else dialogs
+                    }
                     .filter { currentDialog ->
                         val actionContext = contextResolver.resolve(
                             chatDefinition,
