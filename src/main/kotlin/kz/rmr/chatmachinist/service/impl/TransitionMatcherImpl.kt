@@ -65,7 +65,7 @@ class TransitionMatcherImpl<STATE : Any, CONTEXT : Any>(
                     .let { dialogs ->
                         if (triggerDialogId != null) {
                             dialogs.filter { it.id == triggerDialogId }
-                        } else dialogs
+                        } else dialogs.asReversed()
                     }
                     .filter { currentDialog ->
                         val actionContext = contextResolver.resolve(

@@ -51,7 +51,13 @@ class ReplyHandlerImpl<STATE : Any, CONTEXT : Any>(
         val previousMessageId = update.callbackQuery?.message?.messageId ?: matched.dialog.pinnedMessageId
 
         if (previousMessageId != null && !messageDefinition.newMessage && !messageDefinition.newPinnedMessage) {
-            editMessage(previousMessageId, message, chat, parseMode, messageDefinition, apiMethods)
+            try {
+                editMessage(previousMessageId, message, chat, parseMode, messageDefinition, apiMethods)
+                logger.info { "Edited message $previousMessageId for chat ${chat.externalId}, state=${matched.transitionDefinition.thenDefinition.to}" }
+            } catch (e: Exception) {
+                logger.warn(e) { "Failed to edit message $previousMessageId (state=${matched.transitionDefinition.thenDefinition.to}), falling back to sendMessage" }
+                sendMessage(message, chat, parseMode, messageDefinition, apiMethods, matched)
+            }
         } else {
             sendMessage(message, chat, parseMode, messageDefinition, apiMethods, matched)
         }
