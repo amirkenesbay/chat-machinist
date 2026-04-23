@@ -42,6 +42,10 @@ class TriggerHandlerImpl<STATE : Any, CONTEXT : Any>(
             triggerDialogId
         )
 
+        val originalMessageId = actionContext.update.callbackQuery?.message?.messageId
+            ?: actionContext.update.message?.messageId
+        val sameChat = triggerChatId == actionContext.chat.id
+
         val triggerUpdate = Update().apply {
             updateId = random.nextInt()
 
@@ -53,6 +57,9 @@ class TriggerHandlerImpl<STATE : Any, CONTEXT : Any>(
                 this.message = Message().apply {
                     this.chat = org.telegram.telegrambots.meta.api.objects.Chat().apply {
                         this.id = triggerChatId
+                    }
+                    if (sameChat && originalMessageId != null) {
+                        this.messageId = originalMessageId
                     }
                 }
             }

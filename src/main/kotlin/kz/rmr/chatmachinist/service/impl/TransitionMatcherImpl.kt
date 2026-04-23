@@ -22,6 +22,7 @@ class TransitionMatcherImpl<STATE : Any, CONTEXT : Any>(
         chat: Chat<STATE, CONTEXT>
     ): MatchedTransition<STATE, CONTEXT>? {
         var triggerDialogId: String? = null
+        var isTriggered = false
         if (update.callbackQuery?.data != null) {
             val callbackData = callbackDataService.decode(update.callbackQuery.data)
             if (callbackData is TriggerData) {
@@ -30,6 +31,7 @@ class TransitionMatcherImpl<STATE : Any, CONTEXT : Any>(
                     return null
                 }
                 triggerDialogId = callbackData.triggerDialogId
+                isTriggered = true
             }
         }
         return chatDefinition
@@ -81,9 +83,11 @@ class TransitionMatcherImpl<STATE : Any, CONTEXT : Any>(
                                 it.name == dialogDefinition.name
                             }
                             ?.takeIf {
-                                if (update.callbackQuery?.message?.messageId == null) {
-                                    true
-                                } else it.botMessageIds.contains(update.callbackQuery?.message?.messageId)
+                                when {
+                                    isTriggered -> true
+                                    update.callbackQuery?.message?.messageId == null -> true
+                                    else -> it.botMessageIds.contains(update.callbackQuery?.message?.messageId)
+                                }
                             }
                             ?.takeIf {
                                 if (update.message?.replyToMessage?.messageId == null) {
